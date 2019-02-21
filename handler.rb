@@ -1,4 +1,5 @@
 #if not install gem rack: gem install rack
+=begin
 require 'rack'
 
 app = Proc.new do |env|
@@ -10,3 +11,4 @@ app = Proc.new do |env|
 end
 
 Rack::Handler::WEBrick.run app
+=end
