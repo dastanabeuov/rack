@@ -2,15 +2,12 @@ require_relative 'application/time_calculator'
 
 class App
 
-  TIME_PATH = "/time"
-  FORMAT_QUERY_BEGIN = "format"
-
   def call(env)
     request = Rack::Request.new(env)
     response = Rack::Response.new
     response.set_header('Content-Type', 'text/plain')
 
-    if request.path == TIME_PATH
+    if request.path == "/time"
       time_response(request, response)
     else
       not_found_response(response)
@@ -33,7 +30,7 @@ class App
     calculator = TimeCalculator.new(params['format'])
     response.body.push(calculator.form_time_string)
 
-    response.body[0][0..6] == "Unknown" ? response.status = 200 : response.status = 400
+    response.body == calculator.unknown_formats ? response.status = 200 : response.status = 400
   end
 
   def bad_path
@@ -50,7 +47,7 @@ class App
   end
 
   def has_format_params?(params)
-    params.keys.include?(FORMAT_QUERY_BEGIN) && params['format']
+    params.key?('format')
   end
 
 end
