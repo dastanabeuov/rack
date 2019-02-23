@@ -21,16 +21,21 @@ class App
   def time_response(request, response)
     params = request.params
 
-    unless has_format_params?(params)
+    unless params.key?('format')
       response.status = 400
       response.body = bad_query
       return
     end
 
     calculator = TimeCalculator.new(params['format'])
-    response.body.push(calculator.form_time_string)
 
-    response.body == calculator.unknown_formats ? response.status = 200 : response.status = 400
+    if calculator.valid?
+      response.status = 200
+      response.body.push(calculator.formatted_time)
+    else
+      response.status = 400
+      response.body.push(calculator.unknown_formats)
+    end    
   end
 
   def bad_path
@@ -44,10 +49,6 @@ class App
   def not_found_response(response)
     response.status = 404
     response.body = bad_path
-  end
-
-  def has_format_params?(params)
-    params.key?('format')
   end
 
 end
