@@ -14,11 +14,13 @@ class TimeCalculator
   end
 
   def valid? #все ли параметры верны
-    return true if @formats.select { |format| FORMATTED_VERSION.keys.include?(format) }
+    return true if @formats.all? { |format| FORMATTED_VERSION.key?(format) }
+    #unknown_formats.empty? 
+    #@formats.select { |format| FORMATTED_VERSION.keys.include?(format) }
   end
 
   def unknown_formats #список неверных форматов
-    unknown_formats = @formats.select { |format| format != FORMATTED_VERSION.keys }
+    @formats.select { |format| format != FORMATTED_VERSION.keys }
   end
 
   def formatted_time #отформатированное время
